@@ -286,8 +286,9 @@ export default function TaskHomePage() {
             </div>
 
 
+
             {/* TOOLBAR */}
-            <div className="mb-4 flex flex-col justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-3 md:flex-row md:items-center">
+            <div className="mb-5 flex flex-col justify-between gap-4 rounded-2xl border border-purple-400/15 bg-gradient-to-r from-[#171027] via-[#110d20] to-[#19102c] p-4 shadow-lg shadow-purple-950/20 md:flex-row md:items-center">
 
                 <div className="relative w-full md:max-w-sm">
                     <input
@@ -295,17 +296,17 @@ export default function TaskHomePage() {
                         placeholder="Search tasks..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
+                        className="w-full rounded-xl border border-purple-300/20 bg-[#0d0919] px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition-all focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20"
                     />
                 </div>
 
-                <div className="flex w-fit rounded-xl bg-slate-100 p-1">
+                <div className="flex w-fit rounded-xl border border-purple-300/10 bg-[#0b0815] p-1">
 
                     <button
                         onClick={() => setView("kanban")}
-                        className={`rounded-lg px-4 py-2 text-sm font-medium transition ${view === "kanban"
-                            ? "bg-white text-purple-700 shadow-sm"
-                            : "text-slate-500 hover:text-slate-800"
+                        className={`rounded-lg px-5 py-2.5 text-sm font-semibold transition-all duration-300 ${view === "kanban"
+                            ? "bg-gradient-to-r from-[#2c204e] to-[#211154] text-white shadow-lg shadow-purple-900/40"
+                            : "text-slate-400 hover:bg-white/5 hover:text-white"
                             }`}
                     >
                         ▦ Board
@@ -313,9 +314,9 @@ export default function TaskHomePage() {
 
                     <button
                         onClick={() => setView("list")}
-                        className={`rounded-lg px-4 py-2 text-sm font-medium transition ${view === "list"
-                            ? "bg-white text-purple-700 shadow-sm"
-                            : "text-slate-500 hover:text-slate-800"
+                        className={`rounded-lg px-5 py-2.5 text-sm font-semibold transition-all duration-300 ${view === "list"
+                            ? "bg-gradient-to-r from-purple-600 to-violet-500 text-white shadow-lg shadow-purple-900/40"
+                            : "text-slate-400 hover:bg-white/5 hover:text-white"
                             }`}
                     >
                         ☰ List
@@ -323,6 +324,8 @@ export default function TaskHomePage() {
 
                 </div>
             </div>
+
+
 
             {/* KANBAN VIEW */}
             {view === "kanban" && (
@@ -336,30 +339,30 @@ export default function TaskHomePage() {
                         return (
                             <div
                                 key={column}
-                                className="min-w-0 rounded-2xl bg-[#f0f1f7] p-4"
+                                className="min-w-0 rounded-2xl border border-purple-400/15 bg-gradient-to-br from-[#1b1530] via-[#151025] to-[#0e0b1b] p-4 shadow-xl shadow-black/20"
                             >
 
                                 {/* COLUMN HEADER */}
-                                <div className="mb-4 flex items-center justify-between">
+                                <div className="mb-5 flex items-center justify-between">
 
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-3">
+
                                         <span className={`h-2.5 w-2.5 rounded-full ${column === "Pending"
-                                            ? "bg-slate-400"
+                                            ? "bg-amber-400 shadow-2"
                                             : column === "In Progress"
-                                                ? "bg-blue-500"
-                                                : "bg-emerald-500"
+                                                ? "bg-blue-400 shadow-2"
+                                                : "bg-emerald-400 shadow-2"
                                             }`} />
 
-                                        <h3 className="font-bold text-slate-800">
+                                        <h3 className="font-bold text-white">
                                             {column}
                                         </h3>
 
-                                        <span className="rounded-full bg-white px-2 py-0.5 text-xs text-slate-500">
+                                        <span className="rounded-full border border-purple-300/15 bg-white/5 px-2.5 py-0.5 text-xs font-medium text-purple-200">
                                             {columnTasks.length}
                                         </span>
+
                                     </div>
-
-
 
                                 </div>
 
@@ -370,10 +373,11 @@ export default function TaskHomePage() {
 
                                         <div
                                             key={task.id}
-                                            className="group rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+                                            className="group rounded-xl border border-white/10 bg-gradient-to-br from-[#27203c] via-[#1e1931] to-[#171225] p-4 shadow-lg shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:border-purple-400/40 hover:shadow-xl hover:shadow-purple-950/30"
                                         >
 
-                                            <div className="mb-3 flex items-center justify-between">
+                                            {/* PRIORITY */}
+                                            <div className="mb-4 flex items-center justify-between">
 
                                                 <span className={`rounded-md px-2.5 py-1 text-xs font-semibold ${priorityStyle(task.priority)}`}>
                                                     {task.priority} Priority
@@ -381,7 +385,7 @@ export default function TaskHomePage() {
 
                                                 <button
                                                     onClick={() => openEdit(task)}
-                                                    className="text-lg text-slate-400 hover:text-purple-600"
+                                                    className="rounded-lg px-2 py-1 text-lg text-slate-400 transition hover:bg-purple-500/10 hover:text-purple-300"
                                                     title="Edit task"
                                                 >
                                                     ⋯
@@ -389,45 +393,49 @@ export default function TaskHomePage() {
 
                                             </div>
 
-                                            <h4 className="mb-2 font-semibold text-slate-900">
+                                            {/* TITLE */}
+                                            <h4 className="mb-2 font-semibold text-white transition group-hover:text-purple-300">
                                                 {task.title}
                                             </h4>
 
-                                            <p className="mb-5 line-clamp-1 text-sm leading-6 text-slate-500 whitespace-pre-line">
+                                            {/* DESCRIPTION */}
+                                            <p className="mb-5 line-clamp-2 whitespace-pre-line text-sm leading-6 text-slate-400">
                                                 {task.description || "No description provided."}
                                             </p>
 
-                                            <div className="mb-4 flex items-center justify-between border-t border-slate-100 pt-3">
+                                            {/* DUE DATE */}
+                                            <div className="mb-4 flex items-center justify-between border-t border-white/10 pt-3">
 
-                                                <span className="text-xs text-slate-400">
+                                                <span className="text-xs text-slate-500">
                                                     Due date
                                                 </span>
 
-                                                <span className="text-xs font-medium text-slate-600">
+                                                <span className="text-xs font-medium text-slate-300">
                                                     {task.dueDate || "Not set"}
                                                 </span>
 
                                             </div>
 
+                                            {/* ACTION BUTTONS */}
                                             <div className="flex items-center gap-2">
 
                                                 <button
                                                     onClick={() => openDetails(task)}
-                                                    className="flex-1 rounded-lg bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-purple-50 hover:text-purple-700"
+                                                    className="flex-1 rounded-lg border border-purple-400/15 bg-purple-500/10 px-3 py-2 text-xs font-semibold text-purple-300 transition hover:bg-purple-500/25 hover:text-white"
                                                 >
                                                     View
                                                 </button>
 
                                                 <button
                                                     onClick={() => openEdit(task)}
-                                                    className="flex-1 rounded-lg bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-blue-50 hover:text-blue-700"
+                                                    className="flex-1 rounded-lg border border-blue-400/15 bg-blue-500/10 px-3 py-2 text-xs font-semibold text-blue-300 transition hover:bg-blue-500/25 hover:text-white"
                                                 >
                                                     Edit
                                                 </button>
 
                                                 <button
                                                     onClick={() => deleteTask(task.id)}
-                                                    className="rounded-lg bg-slate-50 px-3 py-2 text-xs font-semibold text-red-500 transition hover:bg-red-50"
+                                                    className="rounded-lg border border-red-400/15 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-400 transition hover:bg-red-500/25 hover:text-white"
                                                 >
                                                     Delete
                                                 </button>
@@ -438,11 +446,22 @@ export default function TaskHomePage() {
 
                                     ))}
 
+                                    {/* EMPTY STATE */}
                                     {columnTasks.length === 0 && (
-                                        <div className="rounded-xl border border-dashed border-slate-300 p-8 text-center">
-                                            <p className="text-sm text-slate-400">
+                                        <div className="rounded-xl border border-dashed border-purple-300/20 bg-white/[0.02] p-8 text-center">
+
+                                            <p className="mb-2 text-2xl text-purple-400/50">
+                                                ◇
+                                            </p>
+
+                                            <p className="text-sm font-medium text-slate-400">
                                                 No tasks here
                                             </p>
+
+                                            <p className="mt-1 text-xs text-slate-600">
+                                                Your tasks will appear here
+                                            </p>
+
                                         </div>
                                     )}
 
@@ -455,104 +474,151 @@ export default function TaskHomePage() {
                 </div>
             )}
 
+
+            {/* LIST VIEW */}
+
             {/* LIST VIEW */}
             {view === "list" && (
-                <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+                <div className="overflow-hidden rounded-2xl border border-purple-400/15 bg-gradient-to-br from-[#19132c] via-[#120e20] to-[#0d0a18] shadow-xl shadow-black/20">
 
-                    <table className="w-full min-w-[750px] text-left">
+                    <div className="overflow-x-auto">
 
-                        <thead className="border-b border-slate-100 bg-slate-50">
-                            <tr>
-                                <th className="px-6 py-4 text-xs font-semibold uppercase text-slate-500">
-                                    Task
-                                </th>
-                                <th className="px-6 py-4 text-xs font-semibold uppercase text-slate-500">
-                                    Status
-                                </th>
-                                <th className="px-6 py-4 text-xs font-semibold uppercase text-slate-500">
-                                    Priority
-                                </th>
-                                <th className="px-6 py-4 text-xs font-semibold uppercase text-slate-500">
-                                    Due Date
-                                </th>
-                                <th className="px-6 py-4 text-xs font-semibold uppercase text-slate-500">
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
+                        <table className="w-full min-w-[750px] text-left">
 
-                        <tbody>
-                            {filteredTasks.map((task) => (
-                                <tr
-                                    key={task.id}
-                                    className="border-b border-slate-100 transition hover:bg-slate-50"
-                                >
+                            {/* TABLE HEADER */}
+                            <thead className="border-b border-purple-300/15 bg-white/[0.03]">
 
-                                    <td className="px-6 py-5">
-                                        <p className="font-semibold text-slate-800">
-                                            {task.title}
-                                        </p>
-                                        <p className="mt-1 text-xs text-slate-400 line-clamp-1 whitespace-pre-line">
-                                            {task.description}
-                                        </p>
-                                    </td>
-
-                                    <td className="px-6 py-5">
-                                        <span className={`rounded-full px-3 py-1.5 text-xs font-semibold ${statusStyle(task.status)}`}>
-                                            {task.status}
-                                        </span>
-                                    </td>
-
-                                    <td className="px-6 py-5">
-                                        <span className={`rounded-full px-3 py-1.5 text-xs font-semibold ${priorityStyle(task.priority)}`}>
-                                            {task.priority}
-                                        </span>
-                                    </td>
-
-                                    <td className="px-6 py-5 text-sm text-slate-500">
-                                        {task.dueDate || "Not set"}
-                                    </td>
-
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-3 text-sm font-medium">
-                                            <button
-                                                onClick={() => openDetails(task)}
-                                                className="text-purple-600 hover:underline"
-                                            >
-                                                View
-                                            </button>
-                                            <button
-                                                onClick={() => openEdit(task)}
-                                                className="text-blue-600 hover:underline"
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                onClick={() => deleteTask(task.id)}
-                                                className="text-red-500 hover:underline"
-                                            >
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </td>
-
-                                </tr>
-                            ))}
-
-                            {filteredTasks.length === 0 && (
                                 <tr>
-                                    <td colSpan={5} className="p-10 text-center text-sm text-slate-400">
-                                        No tasks found.
-                                    </td>
+
+                                    <th className="px-6 py-5 text-xs font-bold uppercase tracking-wider text-purple-300">
+                                        Task
+                                    </th>
+
+                                    <th className="px-6 py-5 text-xs font-bold uppercase tracking-wider text-purple-300">
+                                        Status
+                                    </th>
+
+                                    <th className="px-6 py-5 text-xs font-bold uppercase tracking-wider text-purple-300">
+                                        Priority
+                                    </th>
+
+                                    <th className="px-6 py-5 text-xs font-bold uppercase tracking-wider text-purple-300">
+                                        Due Date
+                                    </th>
+
+                                    <th className="px-6 py-5 text-xs font-bold uppercase tracking-wider text-purple-300">
+                                        Actions
+                                    </th>
+
                                 </tr>
-                            )}
 
-                        </tbody>
+                            </thead>
 
-                    </table>
+                            {/* TABLE BODY */}
+                            <tbody>
+
+                                {filteredTasks.map((task) => (
+
+                                    <tr
+                                        key={task.id}
+                                        className="border-b border-white/[0.06] transition-all duration-200 hover:bg-purple-500/[0.07]"
+                                    >
+
+                                        {/* TASK */}
+                                        <td className="px-6 py-5">
+
+                                            <p className="font-semibold text-white">
+                                                {task.title}
+                                            </p>
+
+                                            <p className="mt-1 line-clamp-1 whitespace-pre-line text-xs text-slate-400">
+                                                {task.description || "No description provided."}
+                                            </p>
+
+                                        </td>
+
+                                        {/* STATUS */}
+                                        <td className="px-6 py-5">
+
+                                            <span className={`rounded-full px-3 py-1.5 text-xs font-semibold ${statusStyle(task.status)}`}>
+                                                {task.status}
+                                            </span>
+
+                                        </td>
+
+                                        {/* PRIORITY */}
+                                        <td className="px-6 py-5">
+
+                                            <span className={`rounded-full px-3 py-1.5 text-xs font-semibold ${priorityStyle(task.priority)}`}>
+                                                {task.priority}
+                                            </span>
+
+                                        </td>
+
+                                        {/* DUE DATE */}
+                                        <td className="px-6 py-5 text-sm font-medium text-slate-300">
+
+                                            {task.dueDate || "Not set"}
+
+                                        </td>
+
+                                        {/* ACTIONS */}
+                                        <td className="px-6 py-5">
+
+                                            <div className="flex items-center gap-3 text-sm font-semibold">
+
+                                                <button
+                                                    onClick={() => openDetails(task)}
+                                                    className="text-purple-400 transition hover:text-purple-200"
+                                                >
+                                                    View
+                                                </button>
+
+                                                <button
+                                                    onClick={() => openEdit(task)}
+                                                    className="text-blue-400 transition hover:text-blue-200"
+                                                >
+                                                    Edit
+                                                </button>
+
+                                                <button
+                                                    onClick={() => deleteTask(task.id)}
+                                                    className="text-red-400 transition hover:text-red-300"
+                                                >
+                                                    Delete
+                                                </button>
+
+                                            </div>
+
+                                        </td>
+
+                                    </tr>
+
+                                ))}
+
+                                {/* EMPTY STATE */}
+                                {filteredTasks.length === 0 && (
+
+                                    <tr>
+                                        <td
+                                            colSpan={5}
+                                            className="p-12 text-center text-sm text-slate-400"
+                                        >
+                                            No tasks found.
+                                        </td>
+                                    </tr>
+
+                                )}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
 
                 </div>
             )}
+
 
             {/* CREATE / EDIT MODAL */}
             {showForm && (
