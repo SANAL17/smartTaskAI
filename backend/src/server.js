@@ -5,6 +5,7 @@ const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 const aiRoutes = require("./routes/aiRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
@@ -22,7 +23,7 @@ app.use(
 app.use("/api/users", userRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/ai", aiRoutes);
-
+app.use("/api/dashboard", dashboardRoutes);
 // Home API
 app.get("/", (req, res) => {
   res.send("Welcome to SmartTask AI Backend!");

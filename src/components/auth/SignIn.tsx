@@ -62,7 +62,7 @@ export default function SignUp() {
                         "Content-Type": "application/json",
                     },
                     credentials: "include",
-                    body: JSON.stringify(body) ,
+                    body: JSON.stringify(body),
                 }
             );
 
@@ -90,31 +90,27 @@ export default function SignUp() {
     };
 
     return (
-        <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#F5F7F4] px-5 py-12">
+        <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-5 ">
 
             {/* Background decoration */}
-            <div className="pointer-events-none absolute inset-0">
-                <div className="absolute -left-40 top-20 h-96 w-96 rounded-full bg-emerald-100/60 blur-3xl" />
 
-                <div className="absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-green-100/70 blur-3xl" />
-            </div>
 
             {/* Background branding */}
-            <div className="pointer-events-none absolute left-0 right-0 top-[12%] select-none text-center">
-                <h1 className="whitespace-nowrap text-[13vw] font-black leading-none tracking-[-0.09em] text-[#164E3B]/[0.07]">
+            {/* <div className="pointer-events-none absolute left-0 right-0 top-[15%] select-none text-center">
+                <h1 className="whitespace-nowrap text-[13vw] font-black leading-none tracking-[-0.09em] text-green-100/70 blur-xs">
                     SMARTTASK
                     <span className="text-[#10B981]/20"> AI</span>
                 </h1>
-            </div>
+            </div> */}
 
             {/* Registration content */}
             <div className="relative z-10 w-full max-w-[440px]">
 
                 {/* Heading */}
-                <div className="mb-6 text-center">
-                    <p className="text-md font-medium capitalize text-slate-500">
-                        Create your workspace.
-                    </p>
+                <div className="mb-4 text-center">
+                    <h2 className="mt-1 text-3xl font-bold tracking-tight text-white capitalize">
+                        Create your workspace
+                    </h2>
                 </div>
 
                 {/* Registration card */}
@@ -129,7 +125,7 @@ export default function SignUp() {
                         <div>
                             <label
                                 htmlFor="name"
-                                className="mb-2 block text-sm font-semibold text-[#10231D]"
+                                className="mb-2 block text-sm font-semibold text-white"
                             >
                                 Full Name
                             </label>
@@ -150,7 +146,7 @@ export default function SignUp() {
                         <div>
                             <label
                                 htmlFor="email"
-                                className="mb-2 block text-sm font-semibold text-[#10231D]"
+                                className="mb-2 block text-sm font-semibold text-white"
                             >
                                 Email Address
                             </label>
@@ -171,7 +167,7 @@ export default function SignUp() {
                         <div>
                             <label
                                 htmlFor="password"
-                                className="mb-2 block text-sm font-semibold text-[#10231D]"
+                                className="mb-2 block text-sm font-semibold text-white"
                             >
                                 Password
                             </label>
@@ -202,7 +198,7 @@ export default function SignUp() {
                         <div>
                             <label
                                 htmlFor="rePassword"
-                                className="mb-2 block text-sm font-semibold text-[#10231D]"
+                                className="mb-2 block text-sm font-semibold text-white"
                             >
                                 Confirm Password
                             </label>

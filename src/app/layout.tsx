@@ -1,7 +1,7 @@
 
 import type { Metadata } from "next";
-import Navbar from "@/components/dashboard/Navbar";
 import "./globals.css";
+import AuthWrapper from "./AuthWrapper";
 
 export const metadata: Metadata = {
     title: "SmartTask AI",
@@ -16,13 +16,9 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body>
-                <div className="min-h-screen">
-                    <Navbar />
-
-                    <main className="mx-auto min-h-screen max-w-7xl p-5 md:p-8">
-                        {children}
-                    </main>
-                </div>
+                <AuthWrapper>
+                    {children}
+                </AuthWrapper>
             </body>
         </html>
     );

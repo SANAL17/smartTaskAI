@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import API_URL from "@/lib/api";
+import { log } from "console";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -43,12 +44,25 @@ export default function LoginForm() {
 
       const data = await response.json();
 
+      // console.log(response)
+
+      if (response.ok) {
+        const token = data.token;
+        const user = data.user;
+
+        // Store in localStorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        router.push("/dashboard");
+
+      }
+
       if (!response.ok) {
         setError(data.message || "Login failed");
         return;
       }
 
-      router.push("/dashboard");
 
     } catch (error) {
       setError("Unable to connect to the server. Please try again.");
@@ -58,33 +72,33 @@ export default function LoginForm() {
   };
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#F5F7F4] px-5 py-12">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-5 py-12">
 
       {/* Background decoration */}
-      <div className="pointer-events-none absolute inset-0">
+      {/* <div className="pointer-events-none absolute inset-0">
         <div className="absolute -left-40 top-20 h-96 w-96 rounded-full bg-emerald-100/60 blur-3xl" />
         <div className="absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-green-100/70 blur-3xl" />
-      </div>
+      </div> */}
 
-      {/* Large background branding */}
-      <div className="pointer-events-none absolute left-0 right-0 top-[12%] select-none text-center">
-        <h1 className="whitespace-nowrap text-[13vw] font-black leading-none tracking-[-0.09em] text-[#164E3B]/[0.07]">
+      {/* Large background branding
+      <div className="pointer-events-none absolute left-0 right-0 top-[15%] select-none text-center">
+        <h1 className="whitespace-nowrap text-[13vw] font-black leading-none tracking-[-0.09em] text-green-100/70 blur-xs">
           SMARTTASK
           <span className="text-[#10B981]/20"> AI</span>
         </h1>
-      </div>
+      </div> */}
 
       {/* Login content */}
       <div className="relative z-10 w-full max-w-[440px]">
 
         {/* Brand heading */}
         <div className="mb-4 text-center">
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#10231D]">
+          <h2 className="mt-1 text-3xl font-bold tracking-tight text-white capitalize">
             Welcome back
           </h2>
 
           <p className="mt-2 text-sm text-slate-500">
-            Sign in to continue to your workspace.
+              Login to continue to your workspace.
           </p>
         </div>
 
@@ -97,7 +111,7 @@ export default function LoginForm() {
             <div>
               <label
                 htmlFor="email"
-                className="mb-2 block text-sm font-semibold text-[#10231D]"
+                className="mb-2 block text-sm font-semibold text-white"
               >
                 Email address
               </label>
@@ -119,17 +133,17 @@ export default function LoginForm() {
               <div className="mb-2 flex items-center justify-between">
                 <label
                   htmlFor="password"
-                  className="text-sm font-semibold text-[#10231D]"
+                  className="text-sm  text-slate-300"
                 >
                   Password
                 </label>
 
-                <Link
+                {/* <Link
                   href="/forgot-password"
-                  className="text-xs font-semibold text-[#16845D] hover:text-[#164E3B]"
+                  className="text-xs font-semibold text-slate-300 hover:underline"
                 >
                   Forgot password?
-                </Link>
+                </Link> */}
               </div>
 
               <div className="relative">
@@ -182,9 +196,9 @@ export default function LoginForm() {
             <button
               type="submit"
               disabled={loading}
-              className="h-12 w-full rounded-xl bg-[#164E3B] text-sm font-semibold text-white shadow-lg shadow-emerald-900/10 transition hover:-translate-y-0.5 hover:bg-[#103C2E] hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60"
+              className="h-12 w-full rounded-xl bg-[#215f4a] text-sm font-semibold text-white shadow-lg shadow-emerald-900/10 transition hover:-translate-y-0.5 hover:bg-[#103C2E] hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {loading ? "Signing in..." : "Sign in to your account"}
+              {loading ? "Login..." : "Login to your account"}
             </button>
 
           </form>
@@ -195,7 +209,7 @@ export default function LoginForm() {
               Don't have an account?{" "}
               <Link
                 href="/signup"
-                className="font-bold text-[#16845D] hover:text-[#164E3B]"
+                className="font-bold text-[#16845D] hover:underline"
               >
                 Create account
               </Link>

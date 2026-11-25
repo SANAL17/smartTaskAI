@@ -1,12 +1,28 @@
+const mongoose = require("mongoose");
 const Tasks = require("../models/Task");
 
 const createTask = async (req, res) => {
   try {
-    const { title, description, status, priority, dueDate } = req.body;
+    const {
+      title,
+      description,
+      status,
+      priority,
+      startDate,
+      dueDate,
+      completedDate,
+      user,
+    } = req.body;
 
     if (!title) {
       return res.status(400).json({
         message: "Title is required",
+      });
+    }
+
+    if (!user || !mongoose.Types.ObjectId.isValid(user)) {
+      return res.status(400).json({
+        message: "A valid user ID is required",
       });
     }
 
@@ -15,8 +31,10 @@ const createTask = async (req, res) => {
       description,
       status,
       priority,
+      startDate: startDate || Date.now(),
       dueDate,
-      //   user: "",
+      completedDate,
+      user,
     });
 
     res.status(201).json({
@@ -33,7 +51,15 @@ const createTask = async (req, res) => {
 
 const getAllTasks = async (req, res) => {
   try {
-    const tasks = await Tasks.find().sort({ createdAt: -1 });
+    const { user } = req.body;
+
+    if (!user || !mongoose.Types.ObjectId.isValid(user)) {
+      return res.status(400).json({
+        message: "A valid user ID is required",
+      });
+    }
+
+    const tasks = await Tasks.find({ user }).sort({ createdAt: -1 });
 
     res.status(200).json({
       message: "Tasks fetched successfully",
@@ -87,13 +113,23 @@ const deleteOneTask = async (req, res) => {
 
 const updateTask = async (req, res) => {
   try {
-    const { title, description, status, priority, dueDate } = req.body;
+    const {
+      title,
+      description,
+      status,
+      priority,
+      startDate,
+      dueDate,
+      completedDate,
+    } = req.body;
     const updates = {};
     if (title !== undefined) updates.title = title;
     if (description !== undefined) updates.description = description;
     if (status !== undefined) updates.status = status;
     if (priority !== undefined) updates.priority = priority;
+    if (startDate !== undefined) updates.startDate = startDate || new Date();
     if (dueDate !== undefined) updates.dueDate = dueDate;
+    if (completedDate !== undefined) updates.completedDate = completedDate;
 
     const updated = await Tasks.findByIdAndUpdate(req.params.id, updates, {
       new: true,
@@ -118,4 +154,10 @@ const updateTask = async (req, res) => {
   }
 };
 
-module.exports = { createTask, getAllTasks, getOneTask, deleteOneTask, updateTask };
+module.exports = {
+  createTask,
+  getAllTasks,
+  getOneTask,
+  deleteOneTask,
+  updateTask,
+};

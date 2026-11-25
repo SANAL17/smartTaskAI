@@ -5,6 +5,7 @@
 import React, { useEffect, useState } from "react";
 import TaskModal from "./TaskModal";
 import API_URL from "@/lib/api";
+import { CirclePlus } from "lucide-react";
 
 type Status = "Pending" | "In Progress" | "Completed";
 type Priority = "Low" | "Medium" | "High";
@@ -16,7 +17,15 @@ type Task = {
     description: string;
     status: Status;
     priority: Priority;
+    startDate: string;
     dueDate: string;
+};
+
+const getTodayDate = () => {
+    const now = new Date();
+    return new Date(now.getTime() - now.getTimezoneOffset() * 60_000)
+        .toISOString()
+        .slice(0, 10);
 };
 
 const columns: Status[] = [
@@ -30,6 +39,7 @@ const emptyForm = {
     description: "",
     status: "Pending" as Status,
     priority: "Medium" as Priority,
+    startDate: getTodayDate(),
     dueDate: "",
 };
 
@@ -170,11 +180,37 @@ export default function TaskHomePage() {
 
     const fetchTasks = async () => {
         try {
+            const userData = localStorage.getItem("user");
+            if (!userData) {
+                throw new Error("User data is missing. Please sign in again.");
+            }
+
+            let storedUser: unknown;
+            try {
+                storedUser = JSON.parse(userData);
+            } catch {
+                throw new Error("Stored user data is invalid. Please sign in again.");
+            }
+
+            if (
+                typeof storedUser !== "object" ||
+                storedUser === null ||
+                !("id" in storedUser) ||
+                typeof storedUser.id !== "string" ||
+                !storedUser.id
+            ) {
+                throw new Error("Stored user ID is missing. Please sign in again.");
+            }
+
             const response = await fetch(
                 `${API_URL}/api/tasks/getAllTasks`,
                 {
                     method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                     credentials: "include",
+                    body: JSON.stringify({ user: storedUser.id }),
                 }
             );
 
@@ -187,6 +223,9 @@ export default function TaskHomePage() {
             const apiTasks = (result.tasks || []).map((task: any) => ({
                 ...task,
                 id: task._id,
+                startDate: task.startDate
+                    ? task.startDate.slice(0, 10)
+                    : "",
                 dueDate: task.dueDate ? task.dueDate.slice(0, 10) : "",
             }));
 
@@ -219,13 +258,15 @@ export default function TaskHomePage() {
                         Manage your work, track progress and stay productive.
                     </p>
                 </div>
+
                 <button
                     onClick={openCreate}
-                    className="rounded-2xl border border-purple-400/20 bg-gradient-to-br from-purple-500/20 via-[#1b0d2b] to-[#11051d] p-2 shadow-lg shadow-purple-950/20 transition duration-300 hover:-translate-y-1 hover:border-purple-400/40"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-violet-400/25 bg-gradient-to-br from-violet-500/15 via-[#191629]/90 to-indigo-500/10 px-8 py-2 text-sm font-medium text-white shadow-lg shadow-violet-950/20 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-violet-400/50 hover:shadow-violet-500/15"
                 >
-                    <span className="mr-2 text-purple-200">+</span>
-                    New Task
+                    <CirclePlus size={18} strokeWidth={2} />
+                    <span>New Task</span>
                 </button>
+
                 <TaskModal
                     isOpen={isModalOpen}
                     mode={modalMode}
@@ -305,7 +346,7 @@ export default function TaskHomePage() {
                     <button
                         onClick={() => setView("kanban")}
                         className={`rounded-lg px-5 py-2.5 text-sm font-semibold transition-all duration-300 ${view === "kanban"
-                            ? "bg-gradient-to-r from-[#2c204e] to-[#211154] text-white shadow-lg shadow-purple-900/40"
+                            ? "bg-gradient-to-r from-[#2c204e] to-[#211154] text-white shadow-lg "
                             : "text-slate-400 hover:bg-white/5 hover:text-white"
                             }`}
                     >
@@ -315,7 +356,7 @@ export default function TaskHomePage() {
                     <button
                         onClick={() => setView("list")}
                         className={`rounded-lg px-5 py-2.5 text-sm font-semibold transition-all duration-300 ${view === "list"
-                            ? "bg-gradient-to-r from-purple-600 to-violet-500 text-white shadow-lg shadow-purple-900/40"
+                            ? "bg-gradient-to-r from-[#2c204e] to-[#211154] text-white shadow-lg "
                             : "text-slate-400 hover:bg-white/5 hover:text-white"
                             }`}
                     >
@@ -402,6 +443,19 @@ export default function TaskHomePage() {
                                             <p className="mb-5 line-clamp-2 whitespace-pre-line text-sm leading-6 text-slate-400">
                                                 {task.description || "No description provided."}
                                             </p>
+
+                                            {/* START DATE */}
+                                            <div className="mb-4 flex items-center justify-between border-t border-white/10 pt-3">
+
+                                                <span className="text-xs text-slate-500">
+                                                    Start date
+                                                </span>
+
+                                                <span className="text-xs font-medium text-slate-300">
+                                                    {task.startDate || "Not set"}
+                                                </span>
+
+                                            </div>
 
                                             {/* DUE DATE */}
                                             <div className="mb-4 flex items-center justify-between border-t border-white/10 pt-3">
@@ -503,6 +557,10 @@ export default function TaskHomePage() {
                                     </th>
 
                                     <th className="px-6 py-5 text-xs font-bold uppercase tracking-wider text-purple-300">
+                                        Start Date
+                                    </th>
+
+                                    <th className="px-6 py-5 text-xs font-bold uppercase tracking-wider text-purple-300">
                                         Due Date
                                     </th>
 
@@ -555,6 +613,13 @@ export default function TaskHomePage() {
 
                                         </td>
 
+                                        {/* START DATE */}
+                                        <td className="px-6 py-5 text-sm font-medium text-slate-300">
+
+                                            {task.startDate || "Not set"}
+
+                                        </td>
+
                                         {/* DUE DATE */}
                                         <td className="px-6 py-5 text-sm font-medium text-slate-300">
 
@@ -601,7 +666,7 @@ export default function TaskHomePage() {
 
                                     <tr>
                                         <td
-                                            colSpan={5}
+                                            colSpan={6}
                                             className="p-12 text-center text-sm text-slate-400"
                                         >
                                             No tasks found.
@@ -718,6 +783,21 @@ export default function TaskHomePage() {
 
                             <div>
                                 <label className="mb-2 block text-sm font-medium text-slate-700">
+                                    Start Date
+                                </label>
+                                <input
+                                    type="date"
+                                    value={form.startDate}
+                                    onChange={(e) =>
+                                        setForm({ ...form, startDate: e.target.value })
+                                    }
+                                    required
+                                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-purple-500"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="mb-2 block text-sm font-medium text-slate-700">
                                     Due Date
                                 </label>
                                 <input
@@ -794,6 +874,13 @@ export default function TaskHomePage() {
                                 <span className="text-sm text-slate-500">Priority</span>
                                 <span className={`rounded-full px-3 py-1 text-xs font-semibold ${priorityStyle(selectedTask.priority)}`}>
                                     {selectedTask.priority}
+                                </span>
+                            </div>
+
+                            <div className="flex justify-between">
+                                <span className="text-sm text-slate-500">Start Date</span>
+                                <span className="text-sm font-medium text-slate-700">
+                                    {selectedTask.startDate || "Not set"}
                                 </span>
                             </div>
 

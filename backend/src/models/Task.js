@@ -1,4 +1,3 @@
-
 const mongoose = require("mongoose");
 
 const taskSchema = new mongoose.Schema(
@@ -31,15 +30,25 @@ const taskSchema = new mongoose.Schema(
       default: null,
     },
 
-    // user: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "User",
-    // //   required: true,
-    // },
+    startDate: {
+      type: Date,
+      default: Date.now,
+    },
+
+    completedDate: {
+      type: Date,
+      default: null,
+    },
+
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const Task = mongoose.model("Task", taskSchema);
