@@ -4,6 +4,7 @@
 import API_URL from "@/lib/api";
 import { log } from "console";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export type TaskFormData = {
     title: string;
@@ -168,6 +169,15 @@ export default function TaskModal({
                     completedDate,
                     ...(userId ? { user: userId } : {}),
                 }),
+            });
+
+            toast.success(`Task ${mode === "create" ? "Created" : "Updated"} Successfull!`, {
+                duration: 1500,
+                style: {
+                    background: "#22c55e",
+                    color: "#ffffff",
+                    border: "1px solid #111827",
+                },
             });
 
             const result = await response.json();

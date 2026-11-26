@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import API_URL from "@/lib/api";
 import { log } from "console";
+import { toast } from "sonner";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -54,6 +55,15 @@ export default function LoginForm() {
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
 
+        toast.success("Welcome back!", {
+          description: "You have successfully logged in.",
+          duration: 2000,
+          style: {
+            background: "#22c55e",
+            color: "#ffffff",
+            border: "1px solid #111827",
+          },
+        });
         router.push("/dashboard");
 
       }
@@ -98,7 +108,7 @@ export default function LoginForm() {
           </h2>
 
           <p className="mt-2 text-sm text-slate-500">
-              Login to continue to your workspace.
+            Login to continue to your workspace.
           </p>
         </div>
 

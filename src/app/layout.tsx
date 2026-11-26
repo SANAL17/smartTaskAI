@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import AuthWrapper from "./AuthWrapper";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
     title: "SmartTask AI",
@@ -18,6 +19,12 @@ export default function RootLayout({
             <body>
                 <AuthWrapper>
                     {children}
+                    <Toaster
+                        position="top-center"
+                        richColors
+                        closeButton
+                        duration={2000}
+                    />
                 </AuthWrapper>
             </body>
         </html>
