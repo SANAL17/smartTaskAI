@@ -1,3 +1,4 @@
+
 require("dotenv").config();
 
 const express = require("express");
@@ -11,39 +12,53 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 
+// Middleware
 app.use(express.json());
 app.use(cookieParser());
+
+const allowedOrigins = [
+    "http://localhost:3000",
+    process.env.FRONTEND_URL,
+];
+
 app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  }),
+    cors({
+        origin: function (origin, callback) {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true,
+    })
 );
 
+// Routes
 app.use("/api/users", userRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+
 // Home API
 app.get("/", (req, res) => {
-  res.send("Welcome to SmartTask AI Backend!");
-});
-
-// Tasks API
-app.get("/api/tasks", (req, res) => {
-  res.json({
-    message: "Tasks API is working!",
-    tasks: [],
-  });
+    res.send("Welcome to SmartTask AI Backend!");
 });
 
 // Start server after database connection
 const startServer = async () => {
-  await connectDB();
+    try {
+        await connectDB();
 
-  app.listen(5001, () => {
-    console.log("Backend server running on port 5001");
-  });
+        const PORT = process.env.PORT || 5001;
+
+        app.listen(PORT, "0.0.0.0", () => {
+            console.log(`Backend server running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error("Server startup failed:", error);
+        process.exit(1);
+    }
 };
 
 startServer();
