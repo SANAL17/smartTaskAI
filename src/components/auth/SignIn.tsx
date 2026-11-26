@@ -247,7 +247,7 @@ export default function SignUp() {
                         >
                             {loading
                                 ? "Creating Account..."
-                                : "Create Your Account"}
+                                : "Create Account"}
                         </button>
 
                     </form>

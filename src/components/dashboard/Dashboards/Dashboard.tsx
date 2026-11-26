@@ -8,6 +8,7 @@ import ProductivityChart from "./ProductivityChart";
 import TaskCompletionGauge from "./TaskCompletionGauge";
 import RecentlyCompletedTasks from "./RecentlyCompletedTasks";
 import AIAssistantCard from "./AIAssistantCard";
+import DashboardSkeleton from "./DashboardSkeleton";
 
 type DailyCompletion = {
   day: number;
@@ -123,14 +124,61 @@ function Dashboard() {
     dashboardData?.completedData.reduce((total, item) => total + item.value, 0) ??
     0;
 
+  const [userName, setUserName] = useState("there");
+  const [greeting, setGreeting] = useState("Good morning");
+
+  useEffect(() => {
+    const updateGreeting = () => {
+      const hour = new Date().getHours();
+
+      if (hour >= 5 && hour < 12) {
+        setGreeting("Good morning");
+      } else if (hour >= 12 && hour < 17) {
+        setGreeting("Good afternoon");
+      } else if (hour >= 17 && hour < 21) {
+        setGreeting("Good evening");
+      } else {
+        setGreeting("Good night");
+      }
+    };
+
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        setUserName(user.name || "there");
+      } catch (error) {
+        console.error("Unable to read user details:", error);
+      }
+    }
+
+    updateGreeting();
+
+    // Refresh greeting every minute
+    const interval = setInterval(updateGreeting, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-          <p className="mt-1 text-sm text-gray-400">
-            Track your productivity and task progress.
-          </p>
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-white">
+              {greeting},{" "}
+              <span className="bg-gradient-to-r from-violet-300 via-purple-300 to-indigo-300 bg-clip-text text-transparent">
+                {userName}
+              </span>
+              <span className="ml-2">👋</span>
+            </h1>
+
+            <p className="mt-2 text-sm text-gray-400">
+              Every task completed is a step closer to your goals.
+              Let's make today productive!
+            </p>
+          </div>
         </div>
 
         <div className="flex gap-3">
@@ -182,9 +230,7 @@ function Dashboard() {
       </div>
 
       {loading && (
-        <p className="rounded-xl border border-white/10 bg-[#171725] p-5 text-sm text-gray-300">
-          Loading dashboard data...
-        </p>
+        <DashboardSkeleton />
       )}
       {!loading && error && (
         <p role="alert" className="rounded-xl border border-red-400/20 bg-red-500/10 p-5 text-sm text-red-300">
